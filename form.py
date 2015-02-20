@@ -149,8 +149,13 @@ class register:
         #output.write(doc)
         #output.close()
         #more_output = render.final(tweets,searchTerm)#web.out.write(doc)
-        return web.seeother('/static/thing.txt')#web.header("Content-Disposition","attachment; filename=outputtest.csv")#doc#web.header("Content-Disposition", "attachment; filename=final.html")
-        #return web.input().username"""
+        try:
+            web.ctx.output = str(doc)
+            web.ctx.headers = [("Content-Disposition","attachment; filename=outputtest.csv")]
+            return web.ctx.output #doc#web.header("Content-Disposition", "attachment; filename=final.html")
+        except Exception, e:
+            logging.exception(e)
+            return render.final(tweets,searchTerm)#return web.input().username"""
 
 
     def get_authentication(self):
