@@ -8,3 +8,6 @@ handlers:
 - url: /.*
   script: form.app
 
+libraries:
+- name: ssl
+  version: latest

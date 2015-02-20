@@ -2,24 +2,22 @@ from web.template import CompiledTemplate, ForLoop, TemplateResult
 
 
 # coding: utf-8
-def final (greeting,greeting2):
+def final (tweets,searchTerm):
     __lineoffset__ = -4
     loop = ForLoop()
     self = TemplateResult(); extend_ = self.extend
     extend_([u'\n'])
     extend_([u'<!DOCTYPE html>\n'])
     extend_([u'<center>\n'])
-    extend_([u'<title>HN Birthday Countdown</title>\n'])
+    extend_([u'<title>Carla Results for ', escape_(searchTerm, True), u'</title>\n'])
     extend_([u'<div style="background-color:#ff6600;min-height:25px;width:85%;">\n'])
     extend_([u'</div>\n'])
     extend_([u'<h1 style="font-family:Verdana;">HN Birthday Countdown!</h1>\n'])
     extend_([u'<body style="font-family:Verdana;background-color:#f6f6ef;">\n'])
-    extend_([escape_(greeting, True), u'<br>', escape_(greeting2, True), u'\n'])
+    for tweet in loop.setup(tweets):
+        extend_([u'<p>', escape_(tweet, True), u'</p>\n'])
     extend_([u'</center>\n'])
     extend_([u'</body>\n'])
-    extend_([u'<footer style="width:100%;height:28px;border-top:1px solid #000000;left:0px;text-align:center;position:absolute;bottom:0;font-size:8pt;">\n'])
-    extend_([u'Made by dev1n on HN\n'])
-    extend_([u'</footer>\n'])
 
     return self
 
@@ -47,6 +45,18 @@ def oldregister(form):
 
 oldregister = CompiledTemplate(oldregister, 'templates/oldregister.html')
 join_ = oldregister._join; escape_ = oldregister._escape
+
+# coding: utf-8
+def outputtest():
+    __lineoffset__ = -5
+    loop = ForLoop()
+    self = TemplateResult(); extend_ = self.extend
+    extend_([u'\n'])
+
+    return self
+
+outputtest = CompiledTemplate(outputtest, 'templates/outputtest.csv')
+join_ = outputtest._join; escape_ = outputtest._escape
 
 # coding: utf-8
 def register(form):
