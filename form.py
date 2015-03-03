@@ -9,6 +9,7 @@ sys.path.insert(0,'lib')
 from twython import Twython
 import logging
 import StringIO
+from google.appengine.ext import ndb
 
 urls = ('/.*','register')
 app = web.application(urls,globals())
@@ -16,7 +17,7 @@ render = web.template.render('templates/')
 
 register_form = form.Form(
     form.Textbox("hashtag", description="Hashtag:"),
-    form.Button("Get tweets!",type="submit",description="Get tweets containing this hashtag"),
+    form.Button("Add term",type="submit",description="Get tweets containing this hashtag"),
     validators = []
 )
 
@@ -28,13 +29,46 @@ class download:
 Fuck everything I'll use google's homegrown web framework since that's the only way
 I can find out how to get downloads working.
 """
+"""greetings_query = Greeting.query(
+    ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
+greetings = greetings_query.fetch(10)
+"""
+
+class SearchTerm(ndb.Model):
+    term = ndb.StringProperty(indexed=True)
+
+DEFAULT_GUESTBOOK_NAME = "searchterms"
+
+def search_key(search_name=DEFAULT_GUESTBOOK_NAME):
+    """Constructs a Datastore key for a SearchTerm entity with searchterm."""
+    return ndb.Key('SearchTerms', search_name)
+
         
 class register:
     def GET(self):
         #do $:f.render() in the template
-        f = register_form()
-        return render.register(f)
+        try:
+            f = register_form()
+            for i in xrange(3):
+                a = SearchTerm()
+                a.term = "hello world "+str(i)
+                a.put()
+                logging.info("put a : " + str(i))
+            a = self.get_my_db()
+            return render.register(f,a)
+        except Exception, e:
+            logging.info(e)
+            return render.register(f)
 
+    def get_my_db(self):
+        try:
+            the_query = SearchTerm.query(ancestor=search_key(DEFAULT_GUESTBOOK_NAME))
+            queries = the_query.fetch()
+            return queries
+        except Exception, e:
+            logging.info(e)
+            return ['item x','item y','item z']
+    
     def get_tweets(self, search_term, **kwargs):
         """ Get a user's timeline
 
@@ -63,6 +97,8 @@ class register:
             #twitter = self.get_authentication()
             #user_timeline = twitter.get_user_timeline(screen_name=web.input().hashtag, count=200)
             searchTerm = web.input().hashtag
+            # save the searchTerm
+            a = ["item x", "item y", "item z"]
             logging.info(searchTerm)
             searches = self.get_tweets(searchTerm)#twitter.search(q=web.input().hashtag, count=200)
             logging.info("size of searches: "+str(len(searches['statuses'])))
@@ -151,7 +187,7 @@ class register:
         #more_output = render.final(tweets,searchTerm)#web.out.write(doc)
         try:
             web.ctx.output = str(doc)
-            web.ctx.headers = [("Content-Disposition","attachment; filename=outputtest.csv")]
+            web.ctx.headers = [("Content-Disposition","attachment; filename=output"+str(searchTerm)+".csv")]
             return web.ctx.output #doc#web.header("Content-Disposition", "attachment; filename=final.html")
         except Exception, e:
             logging.exception(e)

@@ -59,7 +59,7 @@ outputtest = CompiledTemplate(outputtest, 'templates/outputtest.csv')
 join_ = outputtest._join; escape_ = outputtest._escape
 
 # coding: utf-8
-def register(form):
+def register(form,a):
     __lineoffset__ = -4
     loop = ForLoop()
     self = TemplateResult(); extend_ = self.extend
@@ -75,6 +75,11 @@ def register(form):
     extend_([u'<form method="POST">\n'])
     extend_([u'    ', escape_(form.render(), False), u'\n'])
     extend_([u'</form>\n'])
+    extend_([u'<table>\n'])
+    extend_([u'<tr><td>Term</td><td>Export</td></tr>\n'])
+    for item in loop.setup(a):
+        extend_([u'<tr><td>', escape_(item, True), u'</td><td>MyButton</td></tr>\n'])
+    extend_([u'</table>\n'])
     extend_([u'</body>\n'])
     extend_([u'</center>\n'])
     extend_([u'<center>\n'])

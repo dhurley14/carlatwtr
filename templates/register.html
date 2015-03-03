@@ -1,4 +1,4 @@
-$def with(form)
+$def with(form,a)
 <!DOCTYPE html>
 <title>Carla Tweets</title>
 <center>
@@ -11,6 +11,11 @@ acquiring them.
 <form method="POST">
     $:form.render()
 </form>
+<table>
+<tr><td>Term</td><td>Export</td></tr>
+$for item in a:
+    <tr><td>$item</td><td>MyButton</td></tr>
+</table>
 </body>
 </center>
 <center>
