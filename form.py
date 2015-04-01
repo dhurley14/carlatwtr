@@ -199,8 +199,8 @@ class register:
 
         return a new instance of the Twython object.
         """
-        APP_KEY = 'iD0lOpbSKZ35Fs6CjKxisPuKn'
-        APP_SECRET = 'n4bqzvLa0dim6U03OM5dDAeTlSjRqi9sZ7YkNY6FBgSyv6JvtV'
+        APP_KEY = 'xxx'
+        APP_SECRET = 'xxxx'
         twitter = Twython(APP_KEY, APP_SECRET)
         return twitter
         
